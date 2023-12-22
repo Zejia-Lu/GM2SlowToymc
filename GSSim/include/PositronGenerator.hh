@@ -25,6 +25,9 @@ public:
     }
 
     void Set_lost_muon(TString file_name, TString hist_name);
+    void Set_lost_rate(double lost_rate) {
+        lost_rate_ = lost_rate;
+    }
 
 private:
     TRandom3 rand_gen_;
@@ -36,7 +39,7 @@ private:
 
     double polarization_ = 0.95;
     double E_max_ = 3100; // in MeV
-    double muon_lifetime_ = 64; // in us
+    double muon_lifetime_ = 64.4; // in us
     double phi0_ = 2.075;
     double omega_a_ = 2 * TMath::Pi() * 0.2291; // in MHz * rad
 
@@ -46,7 +49,7 @@ private:
 
     // For lost muon modelling.
     std::shared_ptr<TH1D> hist_lost_muon_norm_ = nullptr;
-    double lost_rate_ = 1e-1;
+    double lost_rate_ = 1e-2;
 
     std::vector<MCPositronPtr> mc_positrons_;
 };

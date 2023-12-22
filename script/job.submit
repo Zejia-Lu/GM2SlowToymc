@@ -1,0 +1,10 @@
+Universe   = vanilla
+Executable = ../build/GSSim
+Arguments  = -n 1 -r 0
+
+Log        = job/1.out
+Output     = job/1.out
+Error      = job/1.err
+
+Rank       = (OpSysName == "CentOS")
+Queue

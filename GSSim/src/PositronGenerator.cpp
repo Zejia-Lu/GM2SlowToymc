@@ -64,9 +64,11 @@ void PositronGenerator::Generate_lost()
 
     std::sort(lost_times.begin(), lost_times.end());
 
+    std::vector<int> decay_nos = {};
     std::vector<double> decay_times = {};
-    for (auto mc_positron : mc_positrons_) {
-        decay_times.push_back(mc_positron->decay_time);
+    for (int i = 0; i < mc_positrons_.size(); i++) {
+        decay_nos.push_back(i);
+        decay_times.push_back(mc_positrons_.at(i)->decay_time);
     }
 
     std::vector<int> lost_nos = {};
@@ -78,11 +80,10 @@ void PositronGenerator::Generate_lost()
         if (num_residual == 0) break;
 
         int lost_no = no + rand_gen_.Integer(num_residual);
-        while (std::find(lost_nos.begin(), lost_nos.end(), lost_no) != lost_nos.end()) {
-            lost_no = no + rand_gen_.Integer(num_residual);
-        }
-        
-        lost_nos.push_back(lost_no);
+
+        decay_times.erase(decay_times.begin() + lost_no);
+        lost_nos.push_back(*(decay_nos.begin() + lost_no));
+        decay_nos.erase(decay_nos.begin() + lost_no);
     }
 
     for (int i = 0; i < lost_nos.size(); i++) {

@@ -17,14 +17,15 @@ void GSSimulator::Run()
 
     // Output control
     out_file_ = TFile::Open(Form("%s/toymc_run%d.root", out_dir_.Data(), run_num_), "recreate");
-    hist2d_time_energy_ = std::make_shared<TH2D>("hist2d_t_e", "hist2d_t_e;time [#mus];energy [MeV];", 4500, 0, 671.4, 40, 0, 4000);
-    hist1d_time_lost_ = std::make_shared<TH1D>("hist1d_time_lost_", "hist_lm;time [#mus];energy [MeV];", 4500, 0, 671.4);
+    hist2d_time_energy_ = std::make_shared<TH2D>("hist2d_t_e", "hist2d_t_e;time [#mus];energy [MeV]", 4500, 0, 671.4, 40, 0, 4000);
+    hist1d_time_lost_ = std::make_shared<TH1D>("hist1d_time_lost_", "hist_lm;time [#mus]", 4500, 0, 671.4);
 
 
     // Generate and fill
     uint seed = run_num_ * 1000000 + currentTimeInSeconds;
     PositronGenerator pos_generator(seed);
     pos_generator.Set_lost_muon("/lustre/collider/luzejia/gm2/res_slow_toymc/data/lostmuon_run4all.root", "lostMuon/hist_lm");
+    pos_generator.Set_lost_rate(1e-2);
 
     for (int i = 0; i < num_of_fill_; i++) {
 
