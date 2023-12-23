@@ -23,6 +23,7 @@ public:
     std::vector<MCPositronPtr> Get_mc_positrons() {
         return mc_positrons_;
     }
+    double Get_omega_a() {return omega_a_;}
 
     void Set_lost_muon(TString file_name, TString hist_name);
     void Set_lost_rate(double lost_rate) {

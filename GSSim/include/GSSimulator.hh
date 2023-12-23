@@ -27,4 +27,6 @@ private:
     TFile* out_file_;
     std::shared_ptr<TH2D> hist2d_time_energy_;
     std::shared_ptr<TH1D> hist1d_time_lost_;
+    std::shared_ptr<TH2D> hist2d_time_energy_inverse_ratio_;
+    std::shared_ptr<TH1D> hist1d_time_lost_inverse_ratio_;
 };
