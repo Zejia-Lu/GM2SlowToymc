@@ -1,7 +1,7 @@
 #include "TFile.h"
 #include "TString.h"
 #include "TH2D.h"
-#include "PositronGenerator.hh"
+#include "MuonGenerator.hh"
 #include <memory>
 
 class GSSimulator {

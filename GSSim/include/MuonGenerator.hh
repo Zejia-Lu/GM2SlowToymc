@@ -1,4 +1,4 @@
-#include "MCPositron.hh"
+#include "MCMuon.hh"
 #include "TRandom3.h"
 #include "TMath.h"
 #include "TF1.h"
@@ -7,28 +7,28 @@
 #include <vector>
 #include <memory>
 
-typedef std::shared_ptr<MCPositron> MCPositronPtr;
+typedef std::shared_ptr<MCMuon> MCMuonPtr;
 
-class PositronGenerator {
+class MuonGenerator {
 
 public:
-    PositronGenerator(uint seed);
-    ~PositronGenerator() = default;
+    MuonGenerator(uint seed);
+    ~MuonGenerator() = default;
 
-    // Clear MCPositrons
+    // Clear MCMuons
     void Init();
 
-    // Generate MCPositrons with decay time, energy...
+    // Generate MCMuons with decay time, energy...
     void Generate_decay();
 
     // Generate lost muon effect
     void Generate_lost();
 
-    // Generate MCPositrons with uniform energy distribution, for cross check
+    // Generate MCMuons with uniform energy distribution, for cross check
     void Generate_decay_unitEnergy();
 
-    std::vector<MCPositronPtr> Get_mc_positrons() {
-        return mc_positrons_;
+    std::vector<MCMuonPtr> Get_mc_muons() {
+        return mc_muons_;
     }
     double Get_omega_a() {return omega_a_;}
 
@@ -42,7 +42,7 @@ private:
 
     int verbose_ = 1;
 
-    int positrons_per_fill_ = 500;
+    int muons_per_fill_ = 500;
     double t_start_ = 30; // in us
 
     double polarization_ = 0.95;
@@ -63,5 +63,5 @@ private:
     // Wiggle function for uniform energy distribution.
     std::shared_ptr<TF1> wiggle_ = nullptr;
 
-    std::vector<MCPositronPtr> mc_positrons_;
+    std::vector<MCMuonPtr> mc_muons_;
 };

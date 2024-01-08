@@ -29,17 +29,17 @@ void GSSimulator::Run()
         std::make_shared<TH1D>("hist1d_time_lost_inv_ratio", "hist_lm_inv_ratio;time [#mus]", 4500, 0, 671.4);
 
 
-    // Initialize positrons generator.
+    // Initialize muons generator.
     uint seed = run_num_ * 1000000 + currentTimeInSeconds;
-    PositronGenerator pos_generator(seed);
-    pos_generator.Set_lost_muon("/lustre/collider/luzejia/gm2/res_slow_toymc/data/lostmuon_run4all.root", "lostMuon/hist_lm");
-    pos_generator.Set_lost_rate(1e-2);
+    MuonGenerator muon_generator(seed);
+    muon_generator.Set_lost_muon("/lustre/collider/luzejia/gm2/res_slow_toymc/data/lostmuon_run4all.root", "lostMuon/hist_lm");
+    muon_generator.Set_lost_rate(1e-2);
 
 
     // Randomization for inverse ratio method.
     uint seed_ir = run_num_ * 1010000 + currentTimeInSeconds;
     TRandom3 rand_gen_ir(seed_ir);
-    double T_a = 2 * TMath::Pi() / pos_generator.Get_omega_a();
+    double T_a = 2 * TMath::Pi() / muon_generator.Get_omega_a();
 
 
     // Start generation.
@@ -49,19 +49,19 @@ void GSSimulator::Run()
         std::cout << "Generating the " << i + 1 << " fill..." << std::endl;
         // }
 
-        pos_generator.Init();
+        muon_generator.Init();
         // pos_generator.Generate_decay();
-        pos_generator.Generate_decay_unitEnergy();
-        pos_generator.Generate_lost();
+        muon_generator.Generate_decay_unitEnergy();
+        muon_generator.Generate_lost();
 
-        for (auto mc_positron : pos_generator.Get_mc_positrons()) {
+        for (auto mc_muon : muon_generator.Get_mc_muons()) {
             double random_omega_a = rand_gen_ir.Uniform(-T_a/2, T_a/2);
-            if (!mc_positron->lost) {
-                hist2d_time_energy_->Fill(mc_positron->decay_time, mc_positron->decay_energy);
-                hist2d_time_energy_inverse_ratio_->Fill(mc_positron->decay_time + random_omega_a, mc_positron->decay_energy);
+            if (!mc_muon->lost) {
+                hist2d_time_energy_->Fill(mc_muon->decay_time, mc_muon->decay_energy);
+                hist2d_time_energy_inverse_ratio_->Fill(mc_muon->decay_time + random_omega_a, mc_muon->decay_energy);
             } else {
-                hist1d_time_lost_->Fill(mc_positron->lost_time);
-                hist1d_time_lost_inverse_ratio_->Fill(mc_positron->lost_time + random_omega_a);
+                hist1d_time_lost_->Fill(mc_muon->lost_time);
+                hist1d_time_lost_inverse_ratio_->Fill(mc_muon->lost_time + random_omega_a);
             }
         }
     }

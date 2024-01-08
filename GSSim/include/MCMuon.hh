@@ -1,10 +1,10 @@
 #include <iostream>
 
-class MCPositron {
+class MCMuon {
 
 public:
-    MCPositron(double decay_energy, double decay_time, double decay_x, double decay_y);
-    ~MCPositron() = default;
+    MCMuon(double decay_energy, double decay_time, double decay_x, double decay_y);
+    ~MCMuon() = default;
 
     double decay_energy;
     double decay_time;
@@ -17,7 +17,7 @@ public:
     double recon_energy;
     double recon_time;
 
-    friend std::ostream& operator<<(std::ostream& os, const MCPositron& obj);
+    friend std::ostream& operator<<(std::ostream& os, const MCMuon& obj);
 
 private:
 };
