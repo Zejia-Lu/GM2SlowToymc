@@ -15,10 +15,17 @@ public:
     PositronGenerator(uint seed);
     ~PositronGenerator() = default;
 
+    // Clear MCPositrons
     void Init();
 
+    // Generate MCPositrons with decay time, energy...
     void Generate_decay();
+
+    // Generate lost muon effect
     void Generate_lost();
+
+    // Generate MCPositrons with uniform energy distribution, for cross check
+    void Generate_decay_unitEnergy();
 
     std::vector<MCPositronPtr> Get_mc_positrons() {
         return mc_positrons_;
@@ -41,16 +48,20 @@ private:
     double polarization_ = 0.95;
     double E_max_ = 3100; // in MeV
     double muon_lifetime_ = 64.4; // in us
-    double phi0_ = 2.075;
+    double asymmetry_ = 0.36;
     double omega_a_ = 2 * TMath::Pi() * 0.2291; // in MHz * rad
+    double phi0_ = 2.075;
 
     // Normalized energy distribution (depend on polarization and phase)
-    std::shared_ptr<TF1> energy_dist_;
+    std::shared_ptr<TF1> energy_dist_ = nullptr;
     double Get_energy_from_time(double time);
 
     // For lost muon modelling.
     std::shared_ptr<TH1D> hist_lost_muon_norm_ = nullptr;
     double lost_rate_ = 1e-2;
+
+    // Wiggle function for uniform energy distribution.
+    std::shared_ptr<TF1> wiggle_ = nullptr;
 
     std::vector<MCPositronPtr> mc_positrons_;
 };

@@ -11,6 +11,11 @@ PositronGenerator::PositronGenerator(uint seed)
     energy_dist_ = std::make_shared<TF1>("energy_dist", "(x-1) * (4*x^2-5*x-5) * (1 - [0] * (-8*x^2+x+1) / (4*x^2-5*x-5) * cos([1]) )", 0, 1);
     energy_dist_->SetParNames("polarization", "phase");
     energy_dist_->SetParameters(polarization_, 0);
+
+    wiggle_ = std::make_shared<TF1>("wiggle", "exp(-x/[0]) * (1 + [1] * cos([2]*x + [3]))", t_start_, 700);
+    wiggle_->SetParNames("lifetime", "asymmetry", "omega_a", "phi0");
+    wiggle_->SetParameters(muon_lifetime_, asymmetry_, omega_a_, phi0_);
+    wiggle_->SetNpx(100000);
 }
 
 void PositronGenerator::Init()
@@ -24,7 +29,6 @@ void PositronGenerator::Generate_decay()
         std::cerr << "[error] Init() before Generate() to remove generated positrons!" << std::endl;
     }
 
-
     // Generate decay positrons.
     for (int i = 0; i < positrons_per_fill_; i++) {
         double decay_time = rand_gen_.Exp(muon_lifetime_) + t_start_;
@@ -36,7 +40,6 @@ void PositronGenerator::Generate_decay()
         mc_positrons_.push_back(new_positron);
     }
 
-
     // Sort generated positrons according to decay time.
     auto compare_time = [](const MCPositronPtr p1, const MCPositronPtr p2) {
         return p1->decay_time < p2->decay_time;
@@ -45,6 +48,31 @@ void PositronGenerator::Generate_decay()
     std::sort(mc_positrons_.begin(), mc_positrons_.end(), compare_time);
 }
 
+
+void PositronGenerator::Generate_decay_unitEnergy()
+{
+    if (mc_positrons_.size() != 0) {
+        std::cerr << "[error] Init() before Generate() to remove generated positrons!" << std::endl;
+    }
+
+    // Generate decay positrons.
+    for (int i = 0; i < positrons_per_fill_; i++) {
+        double decay_time = wiggle_->GetRandom();
+        double decay_energy = rand_gen_.Uniform(0, E_max_);
+        double decay_x = rand_gen_.Gaus(0, 10);
+        double decay_y = rand_gen_.Gaus(0, 10);
+
+        auto new_positron = std::make_shared<MCPositron>(decay_energy, decay_time, decay_x, decay_y);
+        mc_positrons_.push_back(new_positron);
+    }
+
+    // Sort generated positrons according to decay time.
+    auto compare_time = [](const MCPositronPtr p1, const MCPositronPtr p2) {
+        return p1->decay_time < p2->decay_time;
+    };
+
+    std::sort(mc_positrons_.begin(), mc_positrons_.end(), compare_time);
+}
 
 // Generate lost muon
 void PositronGenerator::Generate_lost()

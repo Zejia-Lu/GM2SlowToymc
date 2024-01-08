@@ -20,9 +20,9 @@ void GSSimulator::Run()
     // Output control
     out_file_ = TFile::Open(Form("%s/toymc_run%d.root", out_dir_.Data(), run_num_), "recreate");
     hist2d_time_energy_ = 
-        std::make_shared<TH2D>("hist2d_t_e", "hist2d_t_e;time [#mus];energy [MeV]", 4500, 0, 671.4, 40, 0, 4000);
+        std::make_shared<TH2D>("hist2d_t_e", "hist2d_t_e;time [#mus];energy [MeV]", 4500, 0, 671.4, 400, 0, 4000);
     hist2d_time_energy_inverse_ratio_ = 
-        std::make_shared<TH2D>("hist2d_t_e_inv_ratio", "hist2d_t_e_inv_ratio;time [#mus];energy [MeV]", 4500, 0, 671.4, 40, 0, 4000);
+        std::make_shared<TH2D>("hist2d_t_e_inv_ratio", "hist2d_t_e_inv_ratio;time [#mus];energy [MeV]", 4500, 0, 671.4, 400, 0, 4000);
     hist1d_time_lost_ = 
         std::make_shared<TH1D>("hist1d_time_lost", "hist_lm;time [#mus]", 4500, 0, 671.4);
     hist1d_time_lost_inverse_ratio_ = 
@@ -50,7 +50,8 @@ void GSSimulator::Run()
         // }
 
         pos_generator.Init();
-        pos_generator.Generate_decay();
+        // pos_generator.Generate_decay();
+        pos_generator.Generate_decay_unitEnergy();
         pos_generator.Generate_lost();
 
         for (auto mc_positron : pos_generator.Get_mc_positrons()) {
