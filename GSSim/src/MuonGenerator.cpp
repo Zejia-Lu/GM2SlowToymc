@@ -12,6 +12,7 @@ MuonGenerator::MuonGenerator(uint seed)
     energy_dist_->SetParNames("polarization", "phase");
     energy_dist_->SetParameters(polarization_, 0);
 
+    // wiggle_ is used to generate random time only if "is_uniform_energy" is on.
     wiggle_ = std::make_shared<TF1>("wiggle", "exp(-x/[0]) * (1 + [1] * cos([2]*x + [3]))", t_start_, 700);
     wiggle_->SetParNames("lifetime", "asymmetry", "omega_a", "phi0");
     wiggle_->SetParameters(muon_lifetime_, asymmetry_, omega_a_, phi0_);
@@ -27,6 +28,7 @@ void MuonGenerator::Generate_decay()
 {
     if (mc_muons_.size() != 0) {
         std::cerr << "[error] Init() before Generate() to remove generated muons!" << std::endl;
+        return;
     }
 
     // Generate decay muons.
@@ -78,7 +80,7 @@ void MuonGenerator::Generate_decay_unitEnergy()
 void MuonGenerator::Generate_lost()
 {
     if (hist_lost_muon_norm_ == nullptr) {
-        std::cerr << "[error] Not lost muon spectrum given! Not lost muon will be generated!" << std::endl;
+        std::cerr << "[error] No lost muon spectrum given! Not lost muon will be generated!" << std::endl;
         return;
     }
 

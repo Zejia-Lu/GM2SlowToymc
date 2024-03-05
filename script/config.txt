@@ -1,3 +1,12 @@
 [control]
 
-is_uniform_energy = true
+run_num = 0
+num_of_fill = 100
+out_dir = ./
+is_uniform_energy = false
+
+[lost_muon]
+
+lost_rate = 1e-2
+lost_muon_path = /lustre/collider/luzejia/gm2/GM2SlowToymc/data/lostmuon_run4all.root
+lost_muon_root_path = lostMuon/hist_lm

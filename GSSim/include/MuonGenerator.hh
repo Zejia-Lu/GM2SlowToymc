@@ -36,9 +36,8 @@ public:
     double Get_omega_a() {return omega_a_;}
 
     void Set_lost_muon(TString file_name, TString hist_name);
-    void Set_lost_rate(double lost_rate) {
-        lost_rate_ = lost_rate;
-    }
+    void Set_lost_rate(double lost_rate) { lost_rate_ = lost_rate; }
+    void Set_muons_per_fill(int number) {muons_per_fill_ = number; }
 
 private:
     TRandom3 rand_gen_;

@@ -24,10 +24,14 @@ public:
 private:
     int verbose_ = 1;
 
-    int run_num_ = 0;
-    long num_of_fill_ = 100;
+    int run_num_;
+    long num_of_fill_;
     TString out_dir_;
-    bool is_uniform_energy_ = false;
+    bool is_uniform_energy_;
+
+    double lost_rate_;
+    TString lost_muon_path_;
+    TString lost_muon_root_path_;
 
     TFile* out_file_;
     std::shared_ptr<TH2D> hist2d_time_energy_;

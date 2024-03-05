@@ -17,6 +17,10 @@ GSSimulator::GSSimulator(GSController &controller)
     num_of_fill_       = controller.num_of_fill;
     out_dir_           = controller.out_dir;
     is_uniform_energy_ = controller.is_uniform_energy;
+
+    lost_rate_           = controller.lost_rate;
+    lost_muon_path_      = controller.lost_muon_path;
+    lost_muon_root_path_ = controller.lost_muon_root_path;
 }
 
 void GSSimulator::Run()
@@ -27,6 +31,13 @@ void GSSimulator::Run()
 
     // Output control
     out_file_ = TFile::Open(Form("%s/toymc_run%d.root", out_dir_.Data(), run_num_), "recreate");
+    if (out_file_ == nullptr) {
+        std::cerr << "[Error] Cannot open file " << Form("%s/toymc_run%d.root", out_dir_.Data(), run_num_) 
+                  << ", please try to modify 'out_dir' in config file."
+                  << std::endl;
+        return;
+    }
+
     hist2d_time_energy_ = 
         std::make_shared<TH2D>("hist2d_t_e", "hist2d_t_e;time [#mus];energy [MeV]", 4500, 0, 671.4, 400, 0, 4000);
     hist2d_time_energy_inverse_ratio_ = 
@@ -40,8 +51,8 @@ void GSSimulator::Run()
     // Initialize muons generator.
     uint seed = run_num_ * 1000000 + currentTimeInSeconds;
     MuonGenerator muon_generator(seed);
-    muon_generator.Set_lost_muon("/lustre/collider/luzejia/gm2/res_slow_toymc/data/lostmuon_run4all.root", "lostMuon/hist_lm");
-    muon_generator.Set_lost_rate(1e-2);
+    muon_generator.Set_lost_muon(lost_muon_path_, lost_muon_root_path_);
+    muon_generator.Set_lost_rate(lost_rate_);
 
 
     // Randomization for inverse ratio method.
@@ -54,7 +65,7 @@ void GSSimulator::Run()
     for (int i = 0; i < num_of_fill_; i++) {
 
         // if ((i + 1) % (num_of_fill_ / 10) == 0) {
-        std::cout << "Generating the " << i + 1 << " fill..." << std::endl;
+        std::cout << "\rGenerating the (" << i + 1 << "/" << num_of_fill_ << ") fill...";
         // }
 
         muon_generator.Init();
@@ -91,5 +102,5 @@ void GSSimulator::Run()
 
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Time taken by Generate_decay(): " << duration.count() << " ms" << std::endl;
+    std::cout << "\nTime taken by Generate_decay(): " << duration.count() << " ms" << std::endl;
 }
