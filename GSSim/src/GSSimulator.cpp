@@ -11,6 +11,14 @@ GSSimulator::GSSimulator(int run_num, const char* out_dir)
 {
 }
 
+GSSimulator::GSSimulator(GSController &controller)
+{
+    run_num_           = controller.run_num;
+    num_of_fill_       = controller.num_of_fill;
+    out_dir_           = controller.out_dir;
+    is_uniform_energy_ = controller.is_uniform_energy;
+}
+
 void GSSimulator::Run()
 {
     auto start = std::chrono::high_resolution_clock::now();
@@ -50,8 +58,13 @@ void GSSimulator::Run()
         // }
 
         muon_generator.Init();
-        // pos_generator.Generate_decay();
-        muon_generator.Generate_decay_unitEnergy();
+        
+        if (!is_uniform_energy_) {
+            muon_generator.Generate_decay();
+        } else {
+            muon_generator.Generate_decay_unitEnergy();
+        }
+        
         muon_generator.Generate_lost();
 
         for (auto mc_muon : muon_generator.Get_mc_muons()) {

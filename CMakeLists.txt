@@ -12,6 +12,9 @@ project(GM2SLOWTOYMC)
 # list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
 find_package(ROOT REQUIRED)
 
+# boost
+find_package(Boost REQUIRED)
+
 # Add source files
 include_directories(GSSim/include)
 
@@ -22,6 +25,7 @@ add_executable(GSSim main.cpp ${GSSim_sources} ${GSSim_headers})
 
 # Link against ROOT libraries
 target_link_libraries(GSSim PUBLIC ${ROOT_LIBRARIES})
+target_link_libraries(GSSim PUBLIC Boost::boost)
 
 # Include ROOT headers
 target_include_directories(GSSim PUBLIC ${ROOT_INCLUDE_DIRS})

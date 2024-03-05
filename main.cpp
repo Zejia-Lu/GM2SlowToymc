@@ -1,32 +1,39 @@
 #include "GSSimulator.hh"
+#include "GSController.hh"
 #include "TString.h"
 
 int main(int argc, char **argv) {
-    // Default parameters
-    int run_num = 0;
-    long num_of_fill = 100;
-    TString out_dir(".");
+    // Get config from file
+    TString config_dir;
+    GSController controller;
 
-    // Read input
+    for (int i = 0; i < argc; ++i) {
+        if (std::string(argv[i]) == "-c" || std::string(argv[i]) == "-config") {
+            if (i + 1 < argc)
+                config_dir = argv[i + 1];
+                controller.Get_config(config_dir);
+        }
+    }
+
+    // Read input from shell
     for (int i = 0; i < argc; ++i) {
 
-        if (std::string(argv[i]) == "-r") {
+        if (std::string(argv[i]) == "-r" || std::string(argv[i]) == "-run") {
             if (i + 1 < argc)
-                run_num = std::atoi(argv[i + 1]);
+                controller.run_num = std::atoi(argv[i + 1]);
 
-        } else if (std::string(argv[i]) == "-n") {
+        } else if (std::string(argv[i]) == "-n" || std::string(argv[i]) == "-nfill") {
             if (i + 1 < argc)
-                num_of_fill = std::atol(argv[i + 1]);
+                controller.num_of_fill = std::atol(argv[i + 1]);
 
-        } else if (std::string(argv[i]) == "-o") {
+        } else if (std::string(argv[i]) == "-o" || std::string(argv[i]) == "-out") {
             if (i + 1 < argc)
-                out_dir = argv[i + 1];
+                controller.out_dir = argv[i + 1];
         }
     }
 
     // Start simulator
-    GSSimulator simulator(run_num, out_dir);
-    simulator.Set_num_of_fill(num_of_fill);
+    GSSimulator simulator(controller);
     simulator.Run();
 
     return 0;

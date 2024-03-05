@@ -1,3 +1,6 @@
+#ifndef MUONGENERATOR_H
+#define MUONGENERATOR_H
+
 #include "MCMuon.hh"
 #include "TRandom3.h"
 #include "TMath.h"
@@ -65,3 +68,5 @@ private:
 
     std::vector<MCMuonPtr> mc_muons_;
 };
+
+#endif

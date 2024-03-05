@@ -1,3 +1,6 @@
+#ifndef MCMUON_H
+#define MCMUON_H
+
 #include <iostream>
 
 class MCMuon {
@@ -21,3 +24,5 @@ public:
 
 private:
 };
+
+#endif

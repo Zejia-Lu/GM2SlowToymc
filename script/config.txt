@@ -1,0 +1,3 @@
+[control]
+
+is_uniform_energy = true
